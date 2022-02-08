@@ -3,11 +3,11 @@ const tableContainer = document.querySelector('.table')
 function createTable(data) {
     const table = document.createElement('table')
     const tHead = document.createElement('thead')
+    const tBody = document.createElement('tbody')
     const keys = Object.keys(data[0])
 
     tableContainer.appendChild(table)
     table.appendChild(tHead)
-    const tBody = document.createElement('tbody')
     table.appendChild(tBody)
 
     for (let i = 0; i < keys.length-1; i++) {
@@ -23,25 +23,36 @@ function fillTable(table, data) {
 }
 
 function addTableRow(table, obj = {}) {
-    const tBody = table.querySelector('tbody')
-    const values = Object.values(obj)
-    const keys = Object.keys(obj)
+  const tBody = table.querySelector('tbody')
+  const values = Object.values(obj)
+  const keys = Object.keys(obj)
 
     let tr = document.createElement('tr')
     tBody.appendChild(tr)
 
     for (let k = 0; k < values.length - 1; k++) {
-        let td = document.createElement('td')
-        tr.appendChild(td)
+      const complexDate = obj[keys[k]]
+      let td = document.createElement('td')
+      tr.appendChild(td)
 
-        if (keys[k] === 'image') {
-            let img = document.createElement('img')
-            td.append(img)
-            img.src = values[k]
-            continue
-        }
+      if (keys[k] === 'image') {
+          let img = document.createElement('img')
+          td.append(img)
 
-        td.innerHTML = values[k]
+          img.src = values[k]
+          continue
+      }
+
+      if (Array.isArray(complexDate)) {
+        td.innerHTML = getStringFromArray(obj[keys[k]])
+        continue
+      }
+
+      if (typeof complexDate === 'object' && complexDate !== null && !(Array.isArray(complexDate))) {
+        td.innerHTML = getStringFromObj(obj[keys[k]])
+        continue
+      }
+      td.innerHTML = values[k]
     }
 }
 
@@ -50,3 +61,28 @@ fetch('./src/data.json')
     .then(json => createTable(json));
 
 
+function getStringFromObj(obj) {
+  const keys = Object.keys(obj)
+  const values = Object.values(obj)
+  let string = ``
+
+  for (let i = 0; i<keys.length; i++) {
+    if (values[i] !== null) {
+      string = string + `${values[i]}\n`
+    }
+
+  }
+  return string
+}
+
+function getStringFromArray(arr) {
+  let arrDate = ``
+
+  arr.forEach(item => {
+    if (item !== null) {
+      arrDate = arrDate + `${getStringFromObj(item)} |\n`
+      getStringFromObj(item)
+    }
+  })
+  return arrDate
+}
