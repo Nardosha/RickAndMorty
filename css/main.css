@@ -66,6 +66,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .wrapper {
+  max-width: 1400px;
+  padding: 0 15px;
   margin: 0 auto;
   display: flex;
   justify-content: center;
@@ -74,20 +76,26 @@ h1, h2, h3, h4, h5, h6 {
 table {
   text-align: center;
   border-collapse: collapse;
-  margin: 0;
+  width: 100%;
+  table-layout: auto;
+  display: table;
 }
-
-._container {
+table ._container {
   padding: 15px 0;
 }
-
-th, td {
+table tr {
+  display: table-row;
+}
+table th {
+  min-width: 50px;
+  max-width: 200px;
+}
+table th, table td {
   border: 1px solid black;
   padding: 3px;
   height: 40px;
 }
-
-img {
+table img {
   width: 75px;
   height: 75px;
 }
